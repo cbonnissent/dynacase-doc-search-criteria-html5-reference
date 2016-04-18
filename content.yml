@@ -1,7 +1,7 @@
 book:
     title: "Guide d'intégration"
     module: "Search Criteria UI HTML5"
-    githubsrc: "git@github.com:Anakeen/dynacase-doc-search-criteria-html5-reference.git"
+    githubsrc: "https://github.com/Anakeen/dynacase-doc-search-criteria-html5-reference"
     version: "1.0"
     edition: "1"
     id_prefix: "search-criteria-html5"
