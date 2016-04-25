@@ -158,11 +158,25 @@ criteriasDef
             Cette URL doit accepter un paramètre "term" qui contient ce qui est actuellement ajouté dans le champs de recherche par l'utilisateur,  
             et retourner un objet array contenant, pour chaque ligne, un objet avec les trois propriétés key (clef stockée et non affichée), value (affiché à l'utilisateur si cet élément est sélectionné), label (présenté dans la liste déroulante)
         
-        defaultValue
-        :   valeur par défaut du critère. Le contenu de cet élément doit être de même type que celui du setValue.
+        value
+        :   valeur par initiale du critère. Le contenu de cet élément est de la même forme que [value][value]
 
+## Valeurs {#search-criteria-html5:bcdf3fd2-cc05-479d-a714-af24cd8c0ac1}
 
-*note :* les id de type account et color ne sont pas pris en compte.
+Les valeurs retournées par les critères sont :
+
+text, longtext, htmltext, title
+:   simple ou multiple : `string` : valeur simple
+
+int, double, money, date, timestamp
+:   simple ou multiple : `string` : valeur simple
+    opérateur entre (`dc:between`) : `objet` : un objet content deux propriétés `valueMin` et `valueMax`
+
+docid, enum, account, state
+:   simple : `objet` : un objet contenant deux propriétés `key` (la valeur brute), `value` (la valeur représentée à l'utilisateur)
+    multiple : `array` : un tableau d'objet simple
+
+*note :* les id de type color ne sont pas pris en compte.
 
 ## Méthodes associées {#search-criteria-html5:7453aefb-5f41-40fe-a49d-0383d7627224}
 
@@ -201,11 +215,7 @@ setValue
 :   Permet d'indiquer la valeur d'un critère. Cette fonction a comme paramètres entrant :
     
     *   id du critère
-    *   valeur à donner au critère :
-        
-        *   chaîne de caractères pour les critères date, text, numérique,
-        *   objet javascript avec les propriétés value1 et value2 pour les critères date et numérique avec l'opérateur between,
-        *   objet javascript avec les propriétés value et key pour les énuméré, relation, account et state simple et tableaux d'objet javascript avec les propriétés value et key pour les énuméré, relation, account et state multiple
+    *   valeur à donner de la forme de celle décrite dans le [chapitre value][value]
 
 Ces méthodes sont appelées avec la syntaxe suivante :
 
@@ -214,15 +224,15 @@ Ces méthodes sont appelées avec la syntaxe suivante :
 
 *note :* Suite à l'évolution de la docGrid les critères pourront lui être passée directement et ensuite être utilisés par la grid pour filtrer ses résultats.
 
-## Évènements associés {#search-criteria-html5:cc897a58-ebc1-4eaa-a81c-a7b59ade13c4}
+## Événements associés {#search-criteria-html5:cc897a58-ebc1-4eaa-a81c-a7b59ade13c4}
 
-Des évènements sont déclenchés à 2 niveaux :
+Des événements sont déclenchés à 2 niveaux :
 
 *   au niveau de criteria
 *   au niveau de chacun des critères
 
 
-###Événements de plus haut niveau {#search-criteria-html5:084efc03-5a6e-4ed4-bd17-29c3c6f47c91}
+### Événements de plus haut niveau {#search-criteria-html5:084efc03-5a6e-4ed4-bd17-29c3c6f47c91}
 
 error
 :   déclenché à chaque erreur détectée.  
@@ -231,18 +241,18 @@ error
 draw
 :   déclenché après l'insertion de l'ensemble des critères de recherche
 
-Les évènements peuvent être écoutés de deux manières différentes :
+Les événements peuvent être écoutés de deux manières différentes :
 
 *   en utilisant les fonctionnalités pour s'attacher à un évènement de jQuery  
-    Il faut alors préfixer l'évènement cible par le nom du widget en minuscule (dans notre cas *docgrid*)
-    
+    Il faut alors préfixer l'événements cible par le nom du widget en minuscule (dans notre cas *criterias*)
+
     [javascript]
     $("#criterias").on("criteriaserror", function(e, ui) { console.log(ui);});
 
 *   en s'inscrivant directement à la création du widget :
 
     [javascript]
-    $("#criterias").criterias({ error : function(e, ui) { console.log(ui);}};
+    $("#criterias").criterias({ error : function(e, ui) { console.log(ui);}});
 
 ###Événements par critère {#search-criteria-html5:1007c56e-cc29-4b16-9924-96a1df843e0c}
 
@@ -251,5 +261,15 @@ change
     Le premier paramètre envoyé est un objet event, le deuxième contient la nouvelle valeur, ou la valeur ajoutée et la 
     liste des nouvelles valeurs pour les critères enum et relation multiple
 
+    [javascript]
+    $("#criterias").on("criteriaschange", function(event, params) { console.log(params);});
+
+L'objet param retourné est le suivant :
+
+    [javascript]
+    {"value":"123","uuid":"13bac76d-8027-47ed-9b2a-9dcbff7f1d7a","id":"title"}
+
+Il contient les éléments `value` (voir le [chapitre value][value]), `id` l'identifiant de l'attribut et l'`uuid` (élément technique).
 
 [mustache]: https://github.com/janl/mustache.js
+[value]: #search-criteria-html5:bcdf3fd2-cc05-479d-a714-af24cd8c0ac1
