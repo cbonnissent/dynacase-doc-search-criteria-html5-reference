@@ -51,7 +51,6 @@ Exemple d'initialisation des criterias en utilisant une table pour les présente
         <link rel="shortcut icon" href="[DYNACASE_FAVICO]"/>
         <link rel="stylesheet" href="css/dcp/document/bootstrap.css?ws=[WS]">
         <link rel="stylesheet" href="css/dcp/document/kendo.css?ws=[WS]">
-        <link rel="stylesheet" href="css/dcp/document/ckeditor.css?ws=[WS]">
         <link rel="stylesheet" href="css/dcp/document/document.css?ws=[WS]">
         <link rel="stylesheet" href="css/search_criteria_html5/search_criteria.css?ws=[WS]"/>
     </head>
@@ -66,21 +65,28 @@ Exemple d'initialisation des criterias en utilisant une table pour les présente
     <script type="text/javascript" src="lib/underscore/underscore.js?ws=[WS]"></script>
     <script type="text/javascript" src="lib/mustache.js/mustache.js?ws=[WS]"></script>
     <script type="text/javascript" src="lib/bootstrap/3/js/tooltip.js?ws=[WS]"></script>
+    <script type="text/javascript" src="DOCUMENT/IHM/widgets/mainWidget-min.js?ws=[WS]"></script>
     <script type="text/javascript" src="lib/KendoUI/ddui/js/kendo-ddui-builded.js?ws=[WS]"></script>
     <script type="text/javascript" src="SEARCH_CRITERIA_HTML5/widgets/main-built.js?ws=[WS]"></script>
     <script>
-        $("#target").criterias({
-            criteriasDef: {
-                defaultFam: "ZOO_DEMANDEADOPTION",
-                criterias: [
-                    {"id": "state"},
-                    {"id": "de_idrealised"}
-                ]
-            }
+        $.when(window.dcp.searchCriteria.criterias).done(function init() {
+            $("#target").criterias({
+                criteriasDef: {
+                    defaultFam: "ZOO_DEMANDEADOPTION",
+                    criterias: [
+                        {"id": "state"},
+                        {"id": "de_idrealised"}
+                    ]
+                }
+            });
         });
     </script>
     </body>
     </html>
+
+Le chargement des dépendances pour les `SEARCH_CRITERIA_HTML5/widgets/main-built.js` est asynchrone (les fichiers de
+templates proviennent du serveur), le `done` de `window.dcp.searchCriteria.criterias` permet d'attendre que l'ensemble
+des dépendances soient disponibles avant de charger les éléments de recherche.
 
 ### Options de configuration {#search-criteria-html5:baf5d0e6-52a6-4ce5-8517-20dc5b20ac91}
 
